@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id Int @id @default(autoincrement())
+  name String @unique
+  description String @db.VarChar(5000)
+  foods Food[]
+
+}
+model Food {
+    id Int @id @default(autoincrement())
+    name String @unique
+    engName String
+    thaiName String
+    Category Category[]
+    description String @db.VarChar(5000)
+    variations Variations[]
+ 
+}
+
+model Variations {
+    id Int @id @default(autoincrement())
+    origin Food @relation(fields: [varid], references: [id])
+    varid Int
+    variationName1 String
+    variationDes1 String
+    variationName2 String
+    variationDes2 String
+    variationName3 String
+    variationDes3 String
+
+}
