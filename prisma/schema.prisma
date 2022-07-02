@@ -14,7 +14,9 @@ model Category {
   id Int @id @default(autoincrement())
   name String @unique
   description String @db.VarChar(5000)
+  type String? @db.VarChar(10)
   foods Food[]
+  img1 String?
 
 }
 model Food {
@@ -25,18 +27,13 @@ model Food {
     Category Category[]
     description String @db.VarChar(5000)
     variations Variations[]
- 
+    img1 String?
 }
 
 model Variations {
     id Int @id @default(autoincrement())
-    origin Food @relation(fields: [varid], references: [id])
-    varid Int
-    variationName1 String
-    variationDes1 String
-    variationName2 String
-    variationDes2 String
-    variationName3 String
-    variationDes3 String
-
+    origin Food? @relation(fields: [originId], references: [id])
+    originId Int?
+    varName String
+    varDes String
 }

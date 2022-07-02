@@ -1,0 +1,62 @@
+.content {
+    border: 0.05em solid;
+    margin-top: 3em;
+}
+
+.foodcontainer {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3em;
+
+}
+
+.image {
+    width: 50%;
+    height: 30%;
+    padding: 1em;
+}
+
+.head {
+    text-align: center;
+}
+
+.othername {
+    text-align: center;
+
+}
+
+.othername * {
+    margin: 0 20px 0;
+}
+
+
+.foodcontainer p {
+    margin: 1em auto;
+    padding: 2em;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.foodcats {
+    margin:1em;
+    text-align: center;
+}
+
+.foodcats span {
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.toCategory {
+    margin: 0 20px 0;
+    color: rgb(12, 89, 254);
+
+
+}
+
+.toCategory:hover {
+    cursor: pointer;
+    font-weight: 600;
+
+}

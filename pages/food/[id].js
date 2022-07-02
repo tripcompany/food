@@ -3,66 +3,79 @@ import chicken from "../../public/chicken.jpeg";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { PrismaClient } from "@prisma/client";
+import Grids from "../../components/grids";
+import styles from "./food.module.css";
 
 const prisma = new PrismaClient();
 
-export default function Category({crtFood, category}) {
+export default function Category({ crtFood, category, similar }) {
+  const catlength = crtFood.Category.length;
 
   return (
-    <div>
-      <div className="foodHead">
-        <Image alt="Category" src={chicken} />
-        {/* 어썸 슬라이더 활용하기 */}
+    <div >
+      <div className={styles.content}>
+      <div className={styles.head}>
         <h1>{crtFood.name}</h1>
-        <h2>{crtFood.engName}</h2>
-        <h2>{crtFood.thaiName}</h2>
-
-
-        <Link href={`/category/${crtFood.Category[0].id}`}>
-          <span className="toCategory">{crtFood.Category[0].name}</span>
-        </Link>
-        <Link href={`/category/${crtFood.Category[1].id}`}>
-          <span className="toCategory">{crtFood.Category[1].name}</span>
-        </Link>
-        <Link href={`/category/${crtFood.Category[2].id}`}>
-          <span className="toCategory">{crtFood.Category[2].name}</span>
-        </Link>
+        <div className={styles.othername}>
+        <span>{crtFood.engName}</span>
+        <span>{crtFood.thaiName}</span>
+        </div>
+        </div>
+        <div className={styles.foodcats}>
+          {crtFood.Category.map((c) => (
+            <span key={c.id}>
+              <Link href={`/category/${c.id}`}>
+                <span className={styles.toCategory}>{c.name}</span>
+              </Link>
+            </span>
+          ))}
+        </div>
+        <div className={styles.foodcontainer}>
+        {crtFood.img1 === null ? null : (
+          <img  className={styles.image} alt="" src={crtFood.img1} />
+        )}
+        {/* 어썸 슬라이더 활용하기 */}
+        <p>{crtFood.description}</p>
       </div>
-      <p>
-   {crtFood.description}
-      </p>
+      </div>
 
       <div>
         <h2>파생 요리</h2>
-        <span>팟타이 꿍</span>
-        <p>새우를 넣은 팟타이</p>
-        <span>팟타이 까이</span>
-        <p>닭고기를 넣은 팟타이</p>
-        <span>팟타이 무</span>
-        <p>돼지고기를 넣은 팟타이</p>
+        {crtFood.variations.map((v) => (
+          <div key={v.id}>
+            <div>{v.varName}</div>
+            <div>{v.varDes}</div>
+          </div>
+        ))}
       </div>
 
       <h2>비슷한 음식들</h2>
-
+      <div className="grid-container">
+        {similar.map((s) => (
+          <Grids
+            type="category"
+            key={s.id}
+            id={s.id}
+            name={s.name}
+            img={s.img1}
+          />
+        ))}
+      </div>
       <h2>다른 카테고리들</h2>
       <div className="grid-container">
         {category.map((c) => (
-          <Link key={c.id} href={`/category/${c.id}`}>
-            <div className="grid">{c.name}</div>
-          </Link>
+          <Grids
+            type="category"
+            key={c.id}
+            id={c.id}
+            name={c.name}
+            img={c.img1}
+          />
         ))}
       </div>
       <style jsx>
         {`
-          span {
-            margin: 0 20px 0;
 
-          }
-          .toCategory:hover {
-            color: rgb(12, 89, 254);
-            font-weight: 600;
-            cursor:pointer;
-          }
         `}
       </style>
     </div>
@@ -70,20 +83,26 @@ export default function Category({crtFood, category}) {
 }
 
 export const getServerSideProps = async (context) => {
-
   const id = context.params.id;
   const crtFood = await prisma.food.findUnique({
     where: { id: parseInt(id) },
     include: {
-      Category:true,
+      Category: true,
+      variations: true,
     },
   });
-  const category = await prisma.category.findMany();
 
-   return {
-     props : {crtFood, category}
- };
+  const similar = await prisma.food.findMany({
+    where: {
+      Category: {
+        some: { name: crtFood.Category[0].name },
+      },
+    },
+  });
+  //여기서 카테고리 기반으로 찾기를 해야
+  const category = await prisma.Category.findMany();
 
- }
-
- 
+  return {
+    props: { crtFood, category, similar },
+  };
+};

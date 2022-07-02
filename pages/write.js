@@ -1,8 +1,10 @@
 import axios from "axios";
-
+import { PrismaClient } from "@prisma/client";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
+const prisma = new PrismaClient();
 
-export default function Write() {
+export default function Write({ catMethod, catIng }) {
   const [select, setSelect] = useState(true);
   const choice = () => {
     setSelect((current) => !current);
@@ -16,15 +18,16 @@ export default function Write() {
   const [method, setMethod] = useState("");
   const [ing1, setIng1] = useState("");
   const [ing2, setIng2] = useState("");
-  const [foodVar1, setFoodVar1] = useState("");
-  const [foodVarDes1, setFoodVarDes1] = useState("");
-  const [foodVar2, setFoodVar2] = useState("");
-  const [foodVarDes2, setFoodVarDes2] = useState("");
-  const [foodVar3, setFoodVar3] = useState("");
-  const [foodVarDes3, setFoodVarDes3] = useState("");
 
   const [category, setCategory] = useState("");
   const [catDescription, setCatDescription] = useState("");
+  const [catType, setCatType] = useState("");
+
+  const [imageSrc1, setImageSrc1] = useState();
+  const [uploadData, setUploadData] = useState();
+
+  const [imageCatSrc1, setImageCatSrc1] = useState();
+  const [uploadCatData, setUploadCatData] = useState();
 
   const [arr] = [
     {
@@ -35,11 +38,12 @@ export default function Write() {
       method: method,
       ing1: ing1,
       ing2: ing2,
+      img1: imageSrc1,
     },
   ];
+  // 데이터 입력하기 전에 확인
   const onClick = () => {
     event.preventDefault();
-    console.log(JSON.stringify(arr));
     console.log(arr);
   };
 
@@ -47,10 +51,13 @@ export default function Write() {
     {
       name: category,
       description: catDescription,
+      type: catType,
+      img1: imageCatSrc1,
     },
   ];
 
-  const create = async () => {
+  // 데이터베이스에 axios를 통해 '음식'을 저장하는 메소드
+  const createFood = async () => {
     alert(JSON.stringify(arr));
     try {
       await axios.post("/api/foodwrite", {
@@ -63,12 +70,14 @@ export default function Write() {
           method: method,
           ing1: ing1,
           ing2: ing2,
+          img1: imageSrc1,
         },
       });
     } catch (error) {
       alert("error");
     }
   };
+  // 데이터베이스에 axios를 통해 '카테고리'를 저장하는 메소드
 
   const createCategory = async () => {
     alert(JSON.stringify(catArr));
@@ -78,11 +87,105 @@ export default function Write() {
         data: {
           name: category,
           description: catDescription,
+          type: catType,
+          img1: imageCatSrc1,
         },
       });
     } catch {
       alert("error");
     }
+  };
+
+  //일단은 음식에 이미지 붙이는 기능
+
+  function cancelImage() {
+    setImageSrc1(null);
+    setUploadData(null);
+    setImageCatSrc1(null);
+    setUploadCatData(null);
+  }
+
+  const handleOnChange = (changeEvent) => {
+    const reader = new FileReader();
+
+    reader.onload = function (onLoadEvent) {
+      setImageSrc1(onLoadEvent.target.result);
+      setUploadData(undefined);
+    };
+    if (event.target.files[0]) {
+      reader.readAsDataURL(event.target.files[0]);
+      console.log(reader);
+    }
+  };
+  const handleOnSubmit = async (event) => {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    //파일이 들어간 것들을 배열화시켜서 fileInput에 저장하는 듯 싶다
+    console.log(event.currentTarget);
+    const fileInput = Array.from(form.elements).find(
+      ({ name }) => name === "file"
+    );
+
+    const formData = new FormData();
+
+    for (const file of fileInput.files) {
+      formData.append("file", file);
+    }
+
+    formData.append("upload_preset", "basic-upload");
+
+    const data = await fetch(
+      "https://api.cloudinary.com/v1_1/dqplzfo9a/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    ).then((r) => r.json());
+
+    setImageSrc1(data.secure_url);
+    setUploadData(data);
+  };
+
+  const handleOnChangeCat = (changeEvent) => {
+    const readerCat = new FileReader();
+
+    readerCat.onload = function (onLoadEvent) {
+      setImageCatSrc1(onLoadEvent.target.result);
+      setUploadCatData(undefined);
+    };
+    if (event.target.files[0]) {
+      readerCat.readAsDataURL(event.target.files[0]);
+    }
+  };
+  const handleOnSubmitCat = async (event) => {
+    event.preventDefault();
+
+    const form = event.currentTarget;
+    //파일이 들어간 것들을 배열화시켜서 fileInput에 저장하는 듯 싶다
+    console.log(event.currentTarget);
+    const fileInput = Array.from(form.elements).find(
+      ({ name }) => name === "filecat"
+    );
+
+    const formData = new FormData();
+
+    for (const file of fileInput.files) {
+      formData.append("file", file);
+    }
+
+    formData.append("upload_preset", "basic-upload");
+
+    const data = await fetch(
+      "https://api.cloudinary.com/v1_1/dqplzfo9a/image/upload",
+      {
+        method: "POST",
+        body: formData,
+      }
+    ).then((r) => r.json());
+
+    setImageCatSrc1(data.secure_url);
+    setUploadCatData(data);
   };
 
   //로그인 상태 체크해서 안되어있으면 접근 금지 표시하기
@@ -116,7 +219,7 @@ export default function Write() {
 
       {select ? (
         <div name="foodwirte">
-          <form name="food" onSubmit={create}>
+          <form id="foodform" name="food" onSubmit={createFood}>
             <label htmlFor="foodName">Name</label>
             <input
               onChange={(e) => setName(e.target.value)}
@@ -149,12 +252,11 @@ export default function Write() {
               id="method"
             >
               <option value="">선택</option>
-
-              <option value="찜">찜</option>
-              <option value="구이">구이</option>
-              <option value="튀김">튀김</option>
-              <option value="볶음">볶음</option>
-              <option value="국물">국물</option>
+              {catMethod.map((m) => (
+                <option key={m.id} value={m.name}>
+                  {m.name}
+                </option>
+              ))}
             </select>
 
             <label htmlFor="ingredient_1">Ingredient_1 Category</label>
@@ -164,11 +266,11 @@ export default function Write() {
               id="ingredient_1"
             >
               <option value="">선택</option>
-
-              <option value="계란">계란</option>
-              <option value="면">면</option>
-              <option value="닭고기">닭고기</option>
-              <option value="새우">새우</option>
+              {catIng.map((i) => (
+                <option key={i.id} value={i.name}>
+                  {i.name}
+                </option>
+              ))}
             </select>
 
             <label htmlFor="ingredient_2">Ingredient_2 Category</label>
@@ -178,79 +280,100 @@ export default function Write() {
               id="ingredient_2"
             >
               <option value="">선택</option>
-              <option value="계란">계란</option>
-              <option value="면">면</option>
-              <option value="닭고기">닭고기</option>
-              <option value="새우">새우</option>
+              {catIng.map((i) => (
+                <option key={i.id} value={i.name}>
+                  {i.name}
+                </option>
+              ))}
             </select>
 
             <label htmlFor="description">Description</label>
             <input
+              className="description"
               onChange={(e) => setDescription(e.target.value)}
               name="description"
-              type="text"
+              type="textarea"
               placeholder="description"
             />
-
-            <label htmlFor="variation_name_1">Variation 1</label>
-            <input
-              onChange={(e) => setfoodVar1(e.target.value)}
-              name="variation_name_1"
-              placeholder="variation_name_1"
-            />
-            <input
-              onChange={(e) => setFoodVarDes1(e.target.value)}
-              name="variation_desc_1"
-              placeholder="variation_description_1"
-            />
-            <label htmlFor="variation_name_2">Variation 2</label>
-            <input
-              onChange={(e) => setfoodVar2(e.target.value)}
-              name="variation_name_2"
-              placeholder="variation_name_2"
-            />
-            <input
-              onChange={(e) => setFoodVarDes2(e.target.value)}
-              name="variation_desc_2"
-              placeholder="variation_description_2"
-            />
-            <label htmlFor="variation_name_3">Variation 3</label>
-            <input
-              onChange={(e) => setfoodVar3(e.target.value)}
-              name="variation_name_3"
-              placeholder="variation_name_3"
-            />
-            <input
-              onChange={(e) => setFoodVarDes3(e.target.value)}
-              name="variation_desc_3"
-              placeholder="variation_description_3"
-            />
-            {/* <input type="file" id="chooseFile" name="chooseFile" accept="image/*" onChange="loadFile(this)" /> */}
-            <button onClick={onClick}>입력</button>
-
-            <input type="submit" />
           </form>
+          <form
+            method="post"
+            onChange={handleOnChange}
+            onSubmit={handleOnSubmit}
+          >
+            <input type="file" name="file" />
+            {imageSrc1 ? (
+              <Image width={500} height={500} alt="" src={imageSrc1} />
+            ) : null}
+            {imageSrc1 && !uploadData && (
+              <p>
+                <button>Upload Files</button>
+                <button onClick={cancelImage}>Cancel</button>
+              </p>
+            )}
+          </form>
+
+          <div>
+            <button type="submit" form="foodform">
+              음식 저장하기
+            </button>
+          </div>
+
+          <button onClick={onClick}>json 출력</button>
         </div>
       ) : (
-        <form name="category" onSubmit={createCategory}>
-          <label htmlFor="catName">Category name</label>
-          <input
-            onChange={(e) => setCategory(e.target.value)}
-            required
-            name="catName"
-            type="text"
-            placeholder="category name"
-          />
-          <label htmlFor="catName">Category Description</label>
-          <input
-            onChange={(e) => setCatDescription(e.target.value)}
-            required
-            name="catDescription"
-            type="text"
-            placeholder="category Description"
-          />
-          <input type="submit" />
-        </form>
+        <div>
+          <form name="category" id="catform" onSubmit={createCategory}>
+            <label htmlFor="catName">Category name</label>
+            <input
+              onChange={(e) => setCategory(e.target.value)}
+              required
+              name="catName"
+              type="text"
+              placeholder="category name"
+            />
+            <label htmlFor="catName">Category Description</label>
+            <textarea
+              className="description"
+              onChange={(e) => setCatDescription(e.target.value)}
+              required
+              name="catDescription"
+              type="textarea"
+              
+              placeholder="category Description"
+            />
+            <label htmlFor="type">Category Type</label>
+
+            <select onChange={(e) => setCatType(e.target.value)} htmlFor="type">
+              <option value="">선택</option>
+              <option value="조리법">조리법</option>
+              <option value="재료">재료</option>
+            </select>
+          </form>
+          <form
+            method="post"
+            onChange={handleOnChangeCat}
+            onSubmit={handleOnSubmitCat}
+          >
+            <input type="file" name="filecat" />
+
+            {imageCatSrc1 ? (
+              <Image width={500} height={500} alt="" src={imageCatSrc1} />
+            ) : null}
+            {imageCatSrc1 && !uploadCatData && (
+              <p>
+                <button>Upload Files</button>
+                <button onClick={cancelImage}>Cancel</button>
+              </p>
+            )}
+          </form>
+
+          <div>
+            <button type="submit" form="catform">
+              카테고리 저장하기
+            </button>
+          </div>
+        </div>
       )}
 
       <style jsx>
@@ -263,8 +386,44 @@ export default function Write() {
             position: relative;
             margin: 20px;
           }
+          form {
+            position: relative;
+          }
+          photo# {
+            height: 100em;
+          }
+          .description {
+            width: 30em;
+            height: 20em;
+            white-space: normal;
+          }
         `}
       </style>
     </div>
   );
 }
+
+export const getServerSideProps = async () => {
+  const catMethod = await prisma.category.findMany({
+    where: {
+      type: "조리법",
+    },
+    select: {
+      name: true,
+      id: true,
+    },
+  });
+  const catIng = await prisma.category.findMany({
+    where: {
+      type: "재료",
+    },
+    select: {
+      name: true,
+      id: true,
+    },
+  });
+
+  return {
+    props: { catMethod, catIng },
+  };
+};

@@ -1,39 +1,47 @@
 import Image from "next/image";
-import chicken from "../../public/chicken.jpeg";
 import { PrismaClient } from "@prisma/client";
-import Link from "next/link";
+import React from "react";
+import Grids from "../../components/grids";
+import styles from "./category.module.css";
 
 const prisma = new PrismaClient();
 
 export default function Category({ nowCategory, category, food }) {
+  console.log(nowCategory);
 
   return (
     <div>
+      <div className={styles.content}>
+      <div className={styles.head}>
       <h1>{nowCategory.name}</h1>
-      <div>
-        <Image alt="Category" src={chicken} />
       </div>
-
-      <p>{nowCategory.description}</p>
+      <div className={styles.catcontainer}>
+        {nowCategory.img1 === null ? null : (
+          <img className={styles.image} alt="" src={nowCategory.img1} />
+        )}
+        <p>{nowCategory.description}</p>{" "}
+      </div>
+      </div>
       <h2>카테고리로 조리한 음식들</h2>
       <div className="grid-container">
         {food.map((f) => (
-          <Link key={f.id} href={`/food/${f.id}`}>
-            <div className="grid">{f.name}</div>
-          </Link>
+          <Grids type="food" key={f.id} id={f.id} name={f.name} img={f.img1} />
         ))}
       </div>
 
       <h2>다른 카테고리들</h2>
       <div className="grid-container">
         {category.map((c) => (
-          <Link key={c.id} href={`/category/${c.id}`}>
-            <div className="grid">{c.name}</div>
-          </Link>
+          <Grids
+            type="category"
+            key={c.id}
+            id={c.id}
+            name={c.name}
+            img={c.img1}
+          />
         ))}
       </div>
     </div>
-
   );
 }
 
@@ -49,13 +57,12 @@ export const getServerSideProps = async (context) => {
       Category: {
         some: {
           name: {
-            contains:nowCategory.name,
+            contains: nowCategory.name,
           },
         },
       },
     },
   });
-
 
   return {
     props: { nowCategory, category, food },

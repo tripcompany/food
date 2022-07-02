@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 export default async function handler(req, res) {
   const {
     body: {
-      data: { name, engName, thaiName, descripcion, method, ing1, ing2,},
+      data: { name, engName, thaiName, descripcion, method, ing1, ing2,img1, },
     }
   } = req;
   const createfood = await prisma.food.create({
@@ -14,6 +14,7 @@ export default async function handler(req, res) {
       engName: engName,
       thaiName: thaiName,
       description: descripcion,
+      img1:img1,
       Category : {connect:[{name: method}, {name: ing1}, {name: ing2}]}
 
     },
