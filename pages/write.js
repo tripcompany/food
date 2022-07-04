@@ -1,7 +1,11 @@
 import axios from "axios";
 import { PrismaClient } from "@prisma/client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo, useRef } from "react";
 import Image from "next/image";
+import TextEditor from "../components/text-editor";
+import dynamic from "next/dynamic";
+import "react-quill/dist/quill.snow.css";
+
 const prisma = new PrismaClient();
 
 export default function Write({ catMethod, catIng }) {
@@ -10,6 +14,10 @@ export default function Write({ catMethod, catIng }) {
     setSelect((current) => !current);
     console.log(select);
   };
+  const QuillWrapper = dynamic(() => import('react-quill'), {
+    ssr: false,
+    loading: () => <p>Loading ...</p>,
+  })
 
   const [name, setName] = useState("");
   const [engName, setEngName] = useState("");
@@ -41,11 +49,6 @@ export default function Write({ catMethod, catIng }) {
       img1: imageSrc1,
     },
   ];
-  // 데이터 입력하기 전에 확인
-  const onClick = () => {
-    event.preventDefault();
-    console.log(arr);
-  };
 
   const [catArr] = [
     {
@@ -56,6 +59,25 @@ export default function Write({ catMethod, catIng }) {
     },
   ];
 
+  // 데이터 입력하기 전에 확인
+  const onClick = () => {
+    event.preventDefault();
+    setCatDescription(document.getElementsByClassName("ql-editor")[0].innerHTML);
+    console.log(catDescription);
+    // console.log(arr);
+  };
+
+/*   const QuillWrapper = dynamic(() => import("react-quill"), {
+    ssr: false,
+    loading: () => <p>Loading ...</p>,
+  });
+
+  const QuillRef = useRef(null);
+  const handleChaneg = (e) => {
+    setCatDescription(e);
+    console.log(catDescription);
+  };
+ */
   // 데이터베이스에 axios를 통해 '음식'을 저장하는 메소드
   const createFood = async () => {
     alert(JSON.stringify(arr));
@@ -332,16 +354,15 @@ export default function Write({ catMethod, catIng }) {
               type="text"
               placeholder="category name"
             />
-            <label htmlFor="catName">Category Description</label>
+            {/*             <label htmlFor="catName">Category Description</label>
             <textarea
               className="description"
               onChange={(e) => setCatDescription(e.target.value)}
-              required
               name="catDescription"
               type="textarea"
-              
               placeholder="category Description"
-            />
+            /> */}
+
             <label htmlFor="type">Category Type</label>
 
             <select onChange={(e) => setCatType(e.target.value)} htmlFor="type">
@@ -350,6 +371,9 @@ export default function Write({ catMethod, catIng }) {
               <option value="재료">재료</option>
             </select>
           </form>
+          <QuillWrapper 
+          className="editor"/>
+
           <form
             method="post"
             onChange={handleOnChangeCat}
@@ -373,6 +397,7 @@ export default function Write({ catMethod, catIng }) {
               카테고리 저장하기
             </button>
           </div>
+          <button onClick={onClick}>json 출력</button>
         </div>
       )}
 

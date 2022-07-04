@@ -22,7 +22,7 @@
 .head h1 {
     text-align: center;
 }
-.catcontainer p {
+.catcontainer span {
     margin:1em auto;
     padding:2em;
     display: flex;

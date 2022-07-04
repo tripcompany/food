@@ -7,7 +7,6 @@ import styles from "./category.module.css";
 const prisma = new PrismaClient();
 
 export default function Category({ nowCategory, category, food }) {
-  console.log(nowCategory);
 
   return (
     <div>
@@ -19,7 +18,7 @@ export default function Category({ nowCategory, category, food }) {
         {nowCategory.img1 === null ? null : (
           <img className={styles.image} alt="" src={nowCategory.img1} />
         )}
-        <p>{nowCategory.description}</p>{" "}
+        <div dangerouslySetInnerHTML={{__html: `${nowCategory.description}`}}></div>
       </div>
       </div>
       <h2>카테고리로 조리한 음식들</h2>

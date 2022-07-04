@@ -30,31 +30,25 @@ export default function admin({ category, food }) {
         <button>신규 작성</button>
       </Link>
 
-      <table>
-        <thead>
-          <tr>
-            <th>이름</th>
-            <th>수정</th>
-            <th>삭제</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>dkdkdkdk</th>
-            <th>dkdkdkdk</th>
-            <th>dkdkdkdk</th>
-          </tr>
-          <tr>
-            <th>dkdkdkdk</th>
-            <th>dkdkdkdk</th>
-            <th>dkdkdkdk</th>
-          </tr>
-        </tbody>
-      </table>
       <div>
         <h2>카테고리들</h2>
 
-        {category.map((c) => (
+      <table>
+ 
+        <tbody>
+            {category.map((c) => (
+              <tr key={c.id}>
+              <th><Link href={`/category/${c.id}`}>{c.name}</Link></th>
+              <th><button value={c.id} name="category" onClick={del}>
+                삭제
+              </button>
+              </th>
+              </tr>
+            ))}
+        </tbody>
+      </table>
+
+        {/*         {category.map((c) => (
           <div key={c.id}>
             <Link href={`/category/${c.id}`}>
               <span>{c.name}</span>
@@ -65,22 +59,24 @@ export default function admin({ category, food }) {
               </button>
             </span>
           </div>
-        ))}
+        ))} */}
       </div>
       <div>
         <h2>음식들</h2>
-        {food.map((f) => (
-          <div key={f.id}>
-            <Link href={`/comment/${f.id}`}>
-              <span>{f.name}</span>
-            </Link>
-            <span>
-              <button value={f.id} name="food" onClick={del}>
+          <table>
+ 
+        <tbody>
+            {food.map((f) => (
+              <tr key={f.id}>
+              <th><Link href={`/food/${f.id}`}>{f.name}</Link></th>
+              <th><button value={f.id} name="food" onClick={del}>
                 삭제
               </button>
-            </span>
-          </div>
-        ))}
+              </th>
+              </tr>
+            ))}
+        </tbody>
+        </table>
       </div>
       <style jsx>
         {`
