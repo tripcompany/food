@@ -5,16 +5,15 @@ const prisma = new PrismaClient();
 export default async function handler(req, res) {
   const {
     body: {
-      data: { name, description,type, img1},
-    }
+      data: { name, description, thaiName, img },
+    },
   } = req;
-  const createfood = await prisma.category.create({
+  const createing = await prisma.ingredient.create({
     data: {
       name: name,
+      thaiName: thaiName,
       description: description,
-      type:type,
-      img1:img1,
-
+      img1: img,
     },
   });
 

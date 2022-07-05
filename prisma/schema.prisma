@@ -10,24 +10,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Category {
+model Method {
   id Int @id @default(autoincrement())
   name String @unique
+  thaiName String
   description String @db.VarChar(5000)
-  type String? @db.VarChar(10)
-  foods Food[]
   img1 String?
-
+  food Food[]
 }
+
+  model Ingredient {
+  id Int @id @default(autoincrement())
+  name String @unique
+  thaiName String
+  description String @db.VarChar(5000)
+  img1 String?
+  food Food[]
+}
+
 model Food {
     id Int @id @default(autoincrement())
     name String @unique
     engName String
     thaiName String
-    Category Category[]
     description String @db.VarChar(5000)
-    variations Variations[]
     img1 String?
+    method Method[]
+    ingredient Ingredient[]
+    variations Variations[]
+
 }
 
 model Variations {

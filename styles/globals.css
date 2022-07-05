@@ -20,7 +20,7 @@ a {
 .grid-container {
   display: grid;
   grid-template-columns: repeat(4, 15em);
-  grid-column-gap: 2em;
+  column-gap: 2em;
   margin: 1em;
 
 }

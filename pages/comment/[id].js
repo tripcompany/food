@@ -6,7 +6,7 @@ import axios from "axios";
 
 const prisma = new PrismaClient();
 
-export default function Category({ crtFood, category, variations }) {
+export default function Category({ crtFood, variations }) {
   const [varName, setVarname] = useState("");
   const [varDes, setVardes] = useState("");
   const originFood = crtFood.id;
@@ -22,6 +22,7 @@ export default function Category({ crtFood, category, variations }) {
           originFood: originFood,
         },
       });
+      location.reload()
     } catch (error) {
       alert("error");
     }
@@ -103,14 +104,11 @@ export const getServerSideProps = async (context) => {
   const id = context.params.id;
   const crtFood = await prisma.food.findUnique({
     where: { id: parseInt(id) },
-    include: {
-      Category: true,
-    },
+
   });
-  const category = await prisma.category.findMany();
   const variations = await prisma.variations.findMany();
 
   return {
-    props: { crtFood, category, variations },
+    props: { crtFood, variations },
   };
 };

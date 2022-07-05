@@ -3,9 +3,19 @@ import Image from "next/image";
 import styles from "./grids.module.css";
 
 export default function Grids({ id, name, img, type, cat1, cat2, cat3 }) {
-  if (type === "category") {
+  if (type === "method") {
     return (
-      <Link href={`/category/${id}`}>
+      <Link href={`/method/${id}`}>
+        <div className={styles.grid}>
+            <img className={styles.img} src={img}/>
+          <span>{name}</span>
+        </div>
+      </Link>
+    );
+  }
+  if (type === "ingredient") {
+    return (
+      <Link href={`/ingredient/${id}`}>
         <div className={styles.grid}>
             <img className={styles.img} src={img}/>
           <span>{name}</span>
@@ -23,10 +33,10 @@ export default function Grids({ id, name, img, type, cat1, cat2, cat3 }) {
             <span>{cat1}</span>
             <span>{cat2}</span>
             <span>{cat3}</span>
-
           </div>
         </div>
       </Link>
     );
   }
+
 }

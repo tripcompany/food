@@ -4,23 +4,38 @@ import Grids from "../components/grids";
 
 const prisma = new PrismaClient();
 
-export default function Home({ category, food }) {
+export default function Home({ method, ingredient, food }) {
   return (
     <div>
       <div>
-        <h2>Category</h2>
+        <h2>Method</h2>
         <div className="grid-container">
-          {category.map((c) => (
+          {method.map((m) => (
             <Grids
-              type="category"
-              key={c.id}
-              id={c.id}
-              name={c.name}
-              img={c.img1}
+              type="method"
+              key={m.id}
+              id={m.id}
+              name={m.name}
+              img={m.img1}
             />
           ))}
         </div>
       </div>
+      <div>
+        <h2>Ingredient</h2>
+        <div className="grid-container">
+          {ingredient.map((i) => (
+            <Grids
+              type="ingredient"
+              key={i.id}
+              id={i.id}
+              name={i.name}
+              img={i.img1}
+            />
+          ))}
+        </div>
+      </div>
+      
       <div>
         <h2>Foods</h2>
         <div className="grid-container">
@@ -40,11 +55,12 @@ export default function Home({ category, food }) {
 }
 
 export const getServerSideProps = async () => {
-  const category = await prisma.category.findMany();
+  const method = await prisma.method.findMany();
+  const ingredient = await prisma.ingredient.findMany();
 
   const food = await prisma.food.findMany();
 
   return {
-    props: { category, food },
+    props: { method, ingredient, food },
   };
 };

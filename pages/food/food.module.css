@@ -60,3 +60,39 @@
     font-weight: 600;
 
 }
+
+.description {
+    margin:1em auto;
+    padding:2em;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.hidebutton {
+    display: none;
+}
+
+
+.select {
+    color: rgb(12, 89, 254);
+    font-size:1.25em;
+    cursor: pointer;
+    margin: 0.375em;
+    display: inline-block;
+    font-weight:400;
+    
+}
+.selected {
+    font-weight: 800;
+}
+
+.similar {
+    display:flex;
+    justify-content: space-between;
+    
+}
+
+.quill {
+    height:500px;
+}

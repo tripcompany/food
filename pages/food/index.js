@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { PrismaClient } from "@prisma/client";
 
+
 const prisma = new PrismaClient();
 
 export default function Category({food}) {
@@ -21,13 +22,13 @@ export default function Category({food}) {
 
 
         <Link href="/category">
-          <span className="toCategory">{food.Category[0].name}</span>
+          <h2 className="toCategory">{food.Category[0].name}</h2>
         </Link>
         <Link href="/category">
-          <span className="toCategory">{food.Category[1].name}</span>
+          <h2 className="toCategory">{food.Category[1].name}</h2>
         </Link>
         <Link href="/category">
-          <span className="toCategory">{food.Category[2].name}</span>
+          <h2 className="toCategory">{food.Category[2].name}</h2>
         </Link>
       </div>
       <p>
@@ -57,6 +58,7 @@ export default function Category({food}) {
             font-weight: 600;
             cursor:pointer;
           }
+
         `}
       </style>
     </div>

@@ -24,8 +24,16 @@ export default async function handler(req, res) {
 
     res.json({ ok: true });
   }
-  if (type === "category") {
-    const delcategory = await prisma.category.delete({
+  if (type === "method") {
+    const delcategory = await prisma.method.delete({
+      where: {
+        id: delId,
+      },
+    });
+    res.json({ ok: true });
+  }
+  if (type === "ingredient") {
+    const delcategory = await prisma.ingredient.delete({
       where: {
         id: delId,
       },
