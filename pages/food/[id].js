@@ -73,11 +73,11 @@ export default function Category({
         </div>
       </div>
 
-      <div className={styles.varwhole}>
-        <h3>파생 요리</h3>
+      <div>
+        <h2>파생 요리</h2>
         {crtFood.variations.map((v) => (
-          <div className={styles.varContainer} key={v.id}>
-            <h4 className={styles.varname}>{v.varName}</h4>
+          <div key={v.id}>
+            <div>{v.varName}</div>
             <div>{v.varDes}</div>
           </div>
         ))}

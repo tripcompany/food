@@ -60,7 +60,7 @@ export default function Category({ nowMethod, method, food, ingredient }) {
 export const getServerSideProps = async (context) => {
   const id = context.params.id;
   const nowMethod = await prisma.method.findUnique({
-    where: { id:parseInt(id)},
+    where: { id: parseInt(id) },
   });
   const method = await prisma.method.findMany();
   const ingredient = await prisma.ingredient.findMany();

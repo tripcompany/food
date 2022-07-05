@@ -1,39 +1,26 @@
 import Link from "next/link";
-import Head from "next/head";
-import Image from "next/image";
-
 
 export default function Nav() {
   return (
     <div>
-      <Head>
-        <title>태국음식사전 by 트립콤파니</title>
-      </Head>
-      <div className="nav">
-        <Link href="/">
-          <img alt="home" src="https://res.cloudinary.com/dqplzfo9a/image/upload/v1657005453/Header_xgdjks.jpg"/>
-        </Link>
-      </div>
+      <Link href="/">
+        <div className="nav">
+          <h1>Thai food dictionary</h1>
+          <h4>by tripcompany</h4>
+        </div>
+      </Link>
 
       <style jsx>{`
         .nav {
-          margin: 2.15em;
           text-align: center;
-          align-items: left;
-  
+          display: flex;
+          flex-direction: column;
+          align-items: center;
         }
-        img {
-          width:50%;
-          height:100%;
-          cursor: pointer;
-        }
- 
-        h1 {
-          display: inline;
-        }
+        h1 {}
         h4 {
           font-weight: 100;
-          margin: 0;
+          margin:0;
         }
       `}</style>
     </div>

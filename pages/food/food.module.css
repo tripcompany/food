@@ -39,7 +39,7 @@
 }
 
 .foodcats {
-    margin: 1em;
+    margin:1em;
     text-align: center;
 }
 
@@ -62,8 +62,8 @@
 }
 
 .description {
-    margin: 1em auto;
-    padding: 2em;
+    margin:1em auto;
+    padding:2em;
     display: flex;
     align-items: center;
     text-align: center;
@@ -76,38 +76,23 @@
 
 .select {
     color: rgb(12, 89, 254);
-    font-size: 1.25em;
+    font-size:1.25em;
     cursor: pointer;
     margin: 0.375em;
     display: inline-block;
-    font-weight: 400;
-
+    font-weight:400;
+    
 }
-
 .selected {
     font-weight: 800;
 }
 
 .similar {
-    display: flex;
+    display:flex;
     justify-content: space-between;
-
-}
-
-.varwhole {
-    background-color:#F2F2F2;
-    padding:1em;
-    margin-top: 3em;
-    margin-bottom: 3em;
-
-}
-
-.varContainer {
-    margin-left: 1em;
-    margin-bottom: 2em;
     
 }
 
-.varname {
-    margin-bottom:0.3em;
+.quill {
+    height:500px;
 }
