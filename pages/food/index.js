@@ -22,13 +22,13 @@ export default function Category({food}) {
 
 
         <Link href="/category">
-          <h2 className="toCategory">{food.Category[0].name}</h2>
+          <span className="toCategory">{food.Category[0].name}</span>
         </Link>
         <Link href="/category">
-          <h2 className="toCategory">{food.Category[1].name}</h2>
+          <span className="toCategory">{food.Category[1].name}</span>
         </Link>
         <Link href="/category">
-          <h2 className="toCategory">{food.Category[2].name}</h2>
+          <span className="toCategory">{food.Category[2].name}</span>
         </Link>
       </div>
       <p>

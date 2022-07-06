@@ -3,7 +3,9 @@ import Head from "next/head";
 import Image from "next/image";
 
 
+
 export default function Nav() {
+  const header = "https://res.cloudinary.com/dqplzfo9a/image/upload/v1657005453/Header_xgdjks.jpg";
   return (
     <div>
       <Head>
@@ -11,8 +13,12 @@ export default function Nav() {
       </Head>
       <div className="nav">
         <Link href="/">
-          <img alt="home" src="https://res.cloudinary.com/dqplzfo9a/image/upload/v1657005453/Header_xgdjks.jpg"/>
+          <img
+            alt="home"
+            src={header}
+          />
         </Link>
+
       </div>
 
       <style jsx>{`
@@ -20,14 +26,13 @@ export default function Nav() {
           margin: 2.15em;
           text-align: center;
           align-items: left;
-  
         }
         img {
-          width:50%;
-          height:100%;
+          width: 50%;
+          height: 100%;
           cursor: pointer;
         }
- 
+
         h1 {
           display: inline;
         }
