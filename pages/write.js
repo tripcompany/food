@@ -1,9 +1,14 @@
 import axios from "axios";
 import { PrismaClient } from "@prisma/client";
 import React, { useEffect, useState, useMemo, useRef } from "react";
+import { useRouter } from "next/router";
+
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
+import { useSession } from "next-auth/react";
+
+
 
 const prisma = new PrismaClient();
 
@@ -13,6 +18,10 @@ const QuillWrapper = dynamic(() => import("react-quill"), {
 });
 
 export default function Write({ method, ing }) {
+
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
 
   const [name, setName] = useState("");
   const [engName, setEngName] = useState("");
@@ -119,6 +128,15 @@ export default function Write({ method, ing }) {
     }
   };
 
+  if (status === "unauthenticated") {
+    router.replace("/admin");
+    return (
+      <div>
+        <h1>Can not access</h1>
+        <div>You must log in</div>
+      </div>
+    );
+  }
 
   //로그인 상태 체크해서 안되어있으면 접근 금지 표시하기
   return (

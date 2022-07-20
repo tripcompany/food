@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { hashPassword } from "../../../lib/auth";
 
 
 const prisma = new PrismaClient();
@@ -41,8 +42,15 @@ async function handler(req, res) {
         return;
     }
 
-    const result = { id: 1, name: name, email: email }
+    const hashedPassword = await hashPassword(password);
 
+    const result = await prisma.user.create({
+        data: {
+            name: name,
+            email: email,
+            password: hashedPassword,
+        },
+    });
     if (result) {
         res.status(201).json({ message: 'Created user!', error: false });
     } else {

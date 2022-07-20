@@ -5,6 +5,10 @@ import Image from "next/image";
 import TextEditor from "../components/text-editor";
 import dynamic from "next/dynamic";
 import "react-quill/dist/quill.snow.css";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
+
+
 
 const QuillWrapper = dynamic(() => import("react-quill"), {
   ssr: false,
@@ -13,6 +17,10 @@ const QuillWrapper = dynamic(() => import("react-quill"), {
 
 export default function Write() {
   const [select, setSelect] = useState(true);
+
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
   const choice = () => {
     setSelect((current) => !current);
     console.log(select);
@@ -187,7 +195,15 @@ export default function Write() {
     setIngImg(data.secure_url);
     setUploadDataIng(data);
   };
-
+  if (status === "unauthenticated") {
+    router.replace("/admin");
+    return (
+      <div>
+        <h1>Can not access</h1>
+        <div>You must log in</div>
+      </div>
+    );
+  }
   //로그인 상태 체크해서 안되어있으면 접근 금지 표시하기
   return (
     <div>

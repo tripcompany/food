@@ -3,6 +3,7 @@ import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { signIn, signOut, useSession } from "next-auth/react";
+import styles from "./admin.module.css";
 
 const prisma = new PrismaClient();
 
@@ -147,7 +148,11 @@ export default function Admin({ method, ingredient, food }) {
   } else {
     return (
       <div>
-        <Link href="/admin/login"><h1>접근 불가</h1></Link>
+        <div className={styles.alert_box}>
+          <Link href="/admin/login">
+            <h1 className={styles.alert}>접근 불가</h1>
+          </Link>
+        </div>
       </div>
     );
   }

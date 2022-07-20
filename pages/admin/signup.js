@@ -29,7 +29,7 @@ export default function Signup() {
         console.log(result);
         setFormStatus(`Sign up Success: ${result.message}`);
         // window.location.href = "/";
-       // router.replace("/admin/login");
+        router.replace("/admin/login");
       } catch (error) {
         console.log(error);
         setFormStatus(`Error Occured: ${error.message}`);
